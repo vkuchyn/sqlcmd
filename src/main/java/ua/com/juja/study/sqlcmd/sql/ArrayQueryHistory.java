@@ -36,5 +36,30 @@ public class ArrayQueryHistory implements QueryHistory {
         // Add query to the head
         // TODO: ArrayList add to the head is low performance operation. Replace with Queue.
         queryList.add(0, query);
+
+        // Reset query index
+        currentQueryIndex = -1;
+    }
+
+    public static void main(String[] args) {
+        ArrayQueryHistory queryhistory = new ArrayQueryHistory();
+        queryhistory.addQueryToTheHead("Query 1");
+        queryhistory.addQueryToTheHead("Query 2");
+        queryhistory.addQueryToTheHead("Query 3");
+        queryhistory.addQueryToTheHead("Query 4");
+        System.out.println(queryhistory.getNextQuery());
+        System.out.println(queryhistory.getNextQuery());
+        System.out.println(queryhistory.getNextQuery());
+        System.out.println(queryhistory.getNextQuery());
+        System.out.println(queryhistory.getNextQuery());
+        System.out.println(queryhistory.getNextQuery());
+        queryhistory.addQueryToTheHead("Query 5");
+        System.out.println(queryhistory.getNextQuery());
+        System.out.println(queryhistory.getNextQuery());
+        System.out.println(queryhistory.getNextQuery());
+        System.out.println(queryhistory.getNextQuery());
+        System.out.println(queryhistory.getNextQuery());
+        System.out.println(queryhistory.getNextQuery());
+        System.out.println(queryhistory.getPreviousQuery());
     }
 }
