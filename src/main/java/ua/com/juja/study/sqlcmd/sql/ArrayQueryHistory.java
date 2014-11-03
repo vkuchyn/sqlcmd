@@ -5,7 +5,6 @@ package ua.com.juja.study.sqlcmd.sql;
  */
 public class ArrayQueryHistory implements QueryHistory {
 
-    int QUERY_BUFFER_COUNT = 3;
     private String[] queryList = new String[QUERY_BUFFER_COUNT];
     private int currentQueryIndex = -1;
     private int queryCount = 0;
