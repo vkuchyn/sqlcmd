@@ -1,8 +1,5 @@
 package ua.com.juja.study.sqlcmd.config;
 
-/**
- * Created by kuznetsov.danil on 10/15/14.
- */
 public class SqlCmdConfig {
     private String userName;
     private String password;
