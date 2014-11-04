@@ -46,17 +46,4 @@ public class MockDatabaseExecutor implements DatabaseExecutor {
             }
 
     }
-
-    public static void main(String[] args) {
-        MockDatabaseExecutor executor = new MockDatabaseExecutor();
-        String databases = Utils.arrayToString(executor.getDatabaseList());
-        System.out.println("Databases are " + databases);
-        System.out.println("Current database is " + executor.getCurrentDatabase());
-        executor.changeDatabase("java");
-        System.out.println("Current database is " + executor.getCurrentDatabase());
-        executor.changeDatabase("database1");
-        System.out.println("Current database is " + executor.getCurrentDatabase());
-        executor.changeDatabase("database2");
-        System.out.println("Current database is " + executor.getCurrentDatabase());
-    }
 }
