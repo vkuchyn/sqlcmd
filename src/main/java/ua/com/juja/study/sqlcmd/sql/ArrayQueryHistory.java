@@ -4,45 +4,37 @@ package ua.com.juja.study.sqlcmd.sql;
  * Created by Nikolay on 04.11.2014.
  */
 public class ArrayQueryHistory implements  QueryHistory{
-    private String[] array = new String[QUERY_BUFFER_COUNT];
-    private String PreviousQuery = "";
-    private String NextQuery = "";
-    private int QueryIndex = -1;
 
-    public ArrayQueryHistory(String[] array) {
-        this.array = array;
-    }
+
+    private String[] listOfRequests = new String[QUERY_BUFFER_COUNT];
+    private int queryIndex = -1;
+    private int queryCount = 0;
 
     @Override
     public String getNextQuery() {
-        if (QueryIndex == -1) {
-            NextQuery = "";
+        if(queryCount > 0 && queryIndex > 0){
+            return listOfRequests[--queryIndex];
         }
-        if (QueryIndex == 0) {
-            NextQuery = array[QueryIndex];
-        } else {
-            NextQuery = array[--QueryIndex];
-        }
-        return NextQuery;
+        return null;
     }
 
     @Override
     public String getPreviousQuery() {
-        QueryIndex++;
-        if (array[QueryIndex] == null) {
-            PreviousQuery = array[QueryIndex - 1];
-            QueryIndex--;
+        if(queryCount > 0 && queryCount - 1 > queryIndex){
+            return listOfRequests[++queryIndex];
         }
-        PreviousQuery = array[QueryIndex];
-        return PreviousQuery;
+        return null;
     }
 
     @Override
     public void addQueryToTheHead(String query) {
-        for (int i = QUERY_BUFFER_COUNT - 1; i > 0; i--) {
-            if (i != QUERY_BUFFER_COUNT - 1) {
-                array[i] = array[i - 1];
-            }
+        for(int i = listOfRequests.length - 2; i >= 0; i--){
+            listOfRequests[i + 1] = listOfRequests[i];
         }
+        listOfRequests[0] = query;
+        if(queryCount < QUERY_BUFFER_COUNT){
+            queryCount++;
+        }
+        queryIndex = -1;
     }
 }
