@@ -40,8 +40,8 @@ public class ArrayQueryHistory  implements QueryHistory {
     @Override
     public void addQueryToTheHead(String query) {
         if (history.size() >= QUERY_BUFFER_COUNT) history.remove(0);
-            history.add(query);
-            currentQuery++;
+        history.add(query);
+        currentQuery = history.size();
     }
 
 }

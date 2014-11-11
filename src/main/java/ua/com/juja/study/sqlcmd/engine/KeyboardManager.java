@@ -28,7 +28,7 @@ public class KeyboardManager {
         return databaseExecutor.executeSqlScript(query);
     }
 
-    public void startListenUser() throws IOException {
+    public void startListenUserKeyboard() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         StringBuilder query = new StringBuilder();
@@ -36,24 +36,24 @@ public class KeyboardManager {
         int indexLastChar; // the last char in query
 
         while (!exit) {
-            query.append(reader.readLine());
 
-            if (query.length() > 0 ){
-                indexLastChar = query.length()-1;
-
-                if (query.substring(indexLastChar, query.length()).equals(";")){
-
-                        if ("\\q;".equals(query.toString())){
-                            exit = true;
-                        } else {
-                            System.out.print("!!!!! ");
-                            executeQuery(query.toString());
-                           // history.addQueryToTheHead(query.toString());
-                        }
-
-                    query = new StringBuilder();
-                }
+            if (query.length() > 0 ) {
+                query.append(" " + reader.readLine());
+            }else {
+                query.append(reader.readLine());
             }
+
+            if ("\\q".equals(query.toString())){
+                    exit = true;
+            }else if(query.length() > 0) {
+                    indexLastChar = query.length()-1;
+                    if (query.substring(indexLastChar, query.length()).equals(";")) {
+                        executeQuery(query.toString());
+                        query = new StringBuilder();
+                    }
+
+            }
+
 
         }
     }
