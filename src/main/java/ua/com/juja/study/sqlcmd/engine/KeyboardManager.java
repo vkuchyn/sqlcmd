@@ -51,6 +51,7 @@ public class KeyboardManager {
         try {
             return databaseExecutor.executeSqlScript(query);
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Got exception when execute script " + e.getMessage());
             return new QueryResult(new Row[]{});
         }
