@@ -18,4 +18,8 @@ public class Row {
     public void addColumnValue(String columnName, Object columnValue) {
         values.put(columnName, columnValue);
     }
+
+    public Object getValue(String column) {
+        return values.get(column);
+    }
 }
