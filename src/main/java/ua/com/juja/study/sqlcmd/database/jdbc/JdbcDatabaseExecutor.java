@@ -8,6 +8,7 @@ import ua.com.juja.study.sqlcmd.database.Row;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static ua.com.juja.study.sqlcmd.database.Row.ROWS_AFFECTED;
@@ -106,7 +107,18 @@ public class JdbcDatabaseExecutor implements DatabaseExecutor {
 
     @Override
     public String[] getDatabaseList() throws DatabaseException {
-        throw new UnsupportedOperationException("Not implemented");
+        List<String> databases = new ArrayList<>();
+        try {
+            DatabaseMetaData metaData = connection.getMetaData();
+            ResultSet rs = metaData.getCatalogs();
+            while (rs.next()) {
+                databases.add(rs.getString(1));
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        }
+
+        return databases.toArray(new String[databases.size()]);
     }
 
     @Override
@@ -114,4 +126,39 @@ public class JdbcDatabaseExecutor implements DatabaseExecutor {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    public static void main(String[] args) throws DatabaseException {
+        SqlCmdConfig config = new SqlCmdConfig();
+        config.setDbUrl("jdbc:postgresql://localhost:5432/juja");
+        config.setDriverName("org.postgresql.Driver");
+        config.setUserName("juja_core");
+        config.setPassword("juja");
+        JdbcDatabaseExecutor executor = new JdbcDatabaseExecutor(config);
+
+        System.out.println(Arrays.toString(executor.getDatabaseList()));
+//        QueryResult updateResult = executor.executeSqlScript("update participations set email='kuchin.victor1@gmail.com' where " +
+//                "email='kuchin2.victor@gmail.com';");
+//        printResult(updateResult);
+//
+//        QueryResult insertResult = executor.executeSqlScript("insert into participations values " +
+//                "('jujad@juja.com.ua', 'JuJaD')");
+//        printResult(insertResult);
+//
+//        QueryResult result = executor.executeSqlScript("select * from participations;");
+//        printResult(result);
+    }
+
+    private static void printResult(QueryResult result) throws DatabaseException {
+        String[] columns = result.getColumnNames();
+        for (String column : columns) {
+            System.out.print(column + " | ");
+        }
+        System.out.println();
+        Row[] rows = result.getRowList();
+        for (Row row : rows) {
+            for (String column : columns) {
+                System.out.print(row.getValue(column) + " | ");
+            }
+            System.out.println();
+        }
+    }
 }
