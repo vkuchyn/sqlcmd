@@ -622,7 +622,8 @@ public class ConsoleReader implements ConsoleOperations {
                         case NEWLINE: // enter
                             moveToEnd();
                             printNewline(); // output newline
-                            return finishBuffer();
+                            return finishSequence();
+
 
                         case DELETE_PREV_CHAR: // backspace
                             success = backspace();
@@ -737,6 +738,17 @@ public class ConsoleReader implements ConsoleOperations {
             }
         } finally {
             terminal.afterReadLine(this, this.prompt, mask);
+        }
+    }
+
+    private String finishSequence() {
+        char stopCharForSequence=';';
+        if(Character.compare(buf.current(),stopCharForSequence)==0){
+            return finishBuffer();
+        }else{
+            if((buf.length()!=0) &&(Character.compare(buf.current(),' ')!=0))
+                buf.write(' ');
+            return "";
         }
     }
 
