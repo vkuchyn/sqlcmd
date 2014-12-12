@@ -29,7 +29,7 @@ public class QueryResult {
         try {
             return futureRowList.get();
         } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseException("Exception with async execution " + e.getMessage());
+            throw new DatabaseException("\nException with async execution " + e.getMessage()+"\n\n");
         }
     }
 
@@ -40,7 +40,16 @@ public class QueryResult {
         return futureRowList.isDone();
     }
 
-    public String[] getColumnNames() {
+    public String[] getColumnNames() throws DatabaseException {
+        if (columnNames == null) {
+            Row[] rows = getRowList();
+            if (rows.length > 0){
+                columnNames = rows[0].getColumnNames();
+                return columnNames;
+            }
+            else
+                return new String[0];
+        }
         return columnNames;
     }
 

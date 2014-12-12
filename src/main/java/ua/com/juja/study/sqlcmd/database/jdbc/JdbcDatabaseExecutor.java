@@ -75,7 +75,6 @@ public class JdbcDatabaseExecutor implements DatabaseExecutor {
         row.addColumnValue(ROWS_AFFECTED, rowsUpdated);
         rows[0] = row;
         QueryResult result = new QueryResult(rows);
-        result.setColumnNames(ROWS_AFFECTED);
         return result;
     }
 
@@ -91,7 +90,6 @@ public class JdbcDatabaseExecutor implements DatabaseExecutor {
         }
         Row[] arrayRows = rows.toArray(new Row[rows.size()]);
         QueryResult queryResult = new QueryResult(arrayRows);
-        queryResult.setColumnNames(columnNames);
         return queryResult;
     }
 

@@ -24,7 +24,11 @@ public class QueryFormatter {
         try {
             String[] header = queryResult.getColumnNames();
             int columnCount = header.length;
-            String[][] data = convertRowListToMatrix(header, queryResult.getRowList());
+            Row[] rows = queryResult.getRowList();
+            if ((columnCount == 0) | (rows.length == 0)) {
+                return "\nQuery didn't return a result\n\n";
+            }
+            String[][] data = convertRowListToMatrix(header, rows);
 
             List<Integer> columnLength = calcLengthColumns(columnCount, header, data);
 
@@ -143,7 +147,8 @@ public class QueryFormatter {
         String[][] rowArray = new String[rowList.length][header.length];
         for (int i = 0; i < rowList.length; i++) {
             for (int j = 0; j < header.length; j++) {
-                rowArray[i][j] = rowList[i].getValue(header[j]).toString();
+                Object value = rowList[i].getValue(header[j]);
+                rowArray[i][j] = (value == null) ? " " : value.toString();
             }
         }
         return rowArray;

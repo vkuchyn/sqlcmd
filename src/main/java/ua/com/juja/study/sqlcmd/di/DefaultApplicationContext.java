@@ -2,7 +2,9 @@ package ua.com.juja.study.sqlcmd.di;
 
 import ua.com.juja.study.sqlcmd.config.SqlCmdConfig;
 import ua.com.juja.study.sqlcmd.database.AsyncDatabaseExecutor;
+import ua.com.juja.study.sqlcmd.database.DatabaseException;
 import ua.com.juja.study.sqlcmd.database.DatabaseExecutor;
+import ua.com.juja.study.sqlcmd.database.jdbc.JdbcDatabaseExecutor;
 import ua.com.juja.study.sqlcmd.database.mock.MockDatabaseExecutor;
 import ua.com.juja.study.sqlcmd.engine.KeyboardManager;
 import ua.com.juja.study.sqlcmd.sql.ArrayQueryHistory;
@@ -25,10 +27,10 @@ public class DefaultApplicationContext implements ApplicationContext {
     private KeyboardManager keyboardManager;
     private ExecutorService executorService;
 
-    public DefaultApplicationContext(SqlCmdConfig config) {
+    public DefaultApplicationContext(SqlCmdConfig config) throws DatabaseException {
         this.config = config;
         executorService = Executors.newFixedThreadPool(5);
-        databaseExecutor = new AsyncDatabaseExecutor(new MockDatabaseExecutor());
+        databaseExecutor = new AsyncDatabaseExecutor(new JdbcDatabaseExecutor(config));
         queryHistory = new ArrayQueryHistory();
         keyboardManager = new KeyboardManager(queryHistory, databaseExecutor);
     }

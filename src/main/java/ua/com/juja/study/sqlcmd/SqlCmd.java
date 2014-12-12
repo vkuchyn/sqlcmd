@@ -2,6 +2,7 @@ package ua.com.juja.study.sqlcmd;
 
 import ua.com.juja.study.sqlcmd.config.SqlCmdConfig;
 import ua.com.juja.study.sqlcmd.config.ValidationException;
+import ua.com.juja.study.sqlcmd.database.DatabaseException;
 import ua.com.juja.study.sqlcmd.di.ApplicationContext;
 import ua.com.juja.study.sqlcmd.di.DefaultApplicationContext;
 
@@ -31,6 +32,10 @@ public class SqlCmd {
             System.exit(1);
         } catch (IOException e) {
             System.err.println("Error with input/output happened. Unable to continue working");
+            System.err.println(e.getMessage());
+            System.exit(1);
+        } catch (DatabaseException e) {
+            System.err.println("Error with database happened. Unable to continue working");
             System.err.println(e.getMessage());
             System.exit(1);
         } finally {

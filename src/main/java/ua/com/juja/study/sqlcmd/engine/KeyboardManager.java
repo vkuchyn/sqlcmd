@@ -1,13 +1,14 @@
 package ua.com.juja.study.sqlcmd.engine;
 
+import jline.ConsoleReader;
+import ua.com.juja.study.sqlcmd.SqlCmd;
 import ua.com.juja.study.sqlcmd.database.DatabaseExecutor;
 import ua.com.juja.study.sqlcmd.database.QueryResult;
 import ua.com.juja.study.sqlcmd.database.Row;
+import ua.com.juja.study.sqlcmd.io.ConsoleFormattedQueryResultWriter;
 import ua.com.juja.study.sqlcmd.sql.QueryHistory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,7 +17,6 @@ import java.io.InputStreamReader;
  * Time: 11:28 PM
  */
 public class KeyboardManager {
-    private static final String QUERY_NEWLINE_SEPARATOR = " ";
     private QueryHistory history;
     private DatabaseExecutor databaseExecutor;
 
@@ -26,23 +26,15 @@ public class KeyboardManager {
     }
 
     public void startListenUserKeyboard() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        boolean exit = false;
-        StringBuilder query = new StringBuilder();
-        while (!exit) {
-            String line = reader.readLine();
-            if ("\\q".equals(line)) {
-                exit = true;
-            } else if (line != null && line.length() > 0) {
-                query.append(line);
-                char lastChar = line.charAt(line.length() - 1);
-                if (lastChar == ';') {
-                    executeQuery(query.toString());
-                    query = new StringBuilder();
-                } else {
-                    query.append(QUERY_NEWLINE_SEPARATOR);
-                }
+        String query = null;
+        ConsoleReader consoleReader = new ConsoleReader();
+        ConsoleFormattedQueryResultWriter queryResultWriter = new ConsoleFormattedQueryResultWriter();
+        queryResultWriter.setApplicationContext(SqlCmd.getApplicationContext());
+        while ((query = consoleReader.readLine()) != null) {
+            if (!query.isEmpty()){
+                queryResultWriter.writeQueryResult(executeQuery(query));
             }
+
         }
     }
 
@@ -52,7 +44,7 @@ public class KeyboardManager {
             return databaseExecutor.executeSqlScript(query);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Got exception when execute script " + e.getMessage());
+            System.err.print("\nGot exception when execute script " + e.getMessage()+"\n\n");
             return new QueryResult(new Row[]{});
         }
     }

@@ -2,6 +2,7 @@ package ua.com.juja.study.sqlcmd.database;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,5 +22,9 @@ public class Row {
 
     public Object getValue(String column) {
         return values.get(column);
+    }
+    public String[] getColumnNames(){
+        Set<String> columnNames=values.keySet();
+        return columnNames.toArray(new String[columnNames.size()]);
     }
 }
